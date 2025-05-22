@@ -1,0 +1,16 @@
+.imageList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  list-style-type: none;
+  padding: 0;
+  margin-bottom: 20px;
+}
+
+.imageItem {
+  flex: 0 0 calc((100% - 45px) / 4);
+  height: 200px;
+  overflow: hidden;
+  box-sizing: border-box;
+  position: relative;
+}
