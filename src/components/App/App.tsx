@@ -1,26 +1,27 @@
 import { useEffect, useState } from 'react';
-import { getPhotos } from './apiService/request';
+import { getPhotos } from '../../apiService/request';
 import { Toaster } from 'react-hot-toast';
 import './App.css';
-import SearchBar from './components/SearchBar/SearchBar';
-import LoadMoreBtn from './components/LoadMoreBtn/LoadMoreBtn';
-import ImageGallery from './components/ImageGallery/ImageGallery';
-import Loader from './components/Loader/Loader';
-import ErrorMessage from './components/ErrorMessage/ErrorMessage';
-import ImageModal from './components/ImageModal/ImageModal';
+import SearchBar from '../SearchBar/SearchBar';
+import LoadMoreBtn from '../LoadMoreBtn/LoadMoreBtn';
+import ImageGallery from '../ImageGallery/ImageGallery';
+import Loader from '../Loader/Loader';
+import ErrorMessage from '../ErrorMessage/ErrorMessage';
+import ImageModal from '../ImageModal/ImageModal';
+import { IPhoto } from './App.types';
 
 function App() {
-  const [photos, setPhotos] = useState([]);
-  const [query, setQuery] = useState('');
-  const [page, setPage] = useState(1);
-  const [error, setError] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [isEmpty, setIsEmpty] = useState(false);
-  const [isVisible, setIsVisible] = useState(false);
-  const [modalIsOpen, setModalIsOpen] = useState(false);
-  const [modalAlt, setModalAlt] = useState('');
-  const [modalSrc, setModalSrc] = useState('');
-  const [likes, setLikes] = useState('');
+  const [photos, setPhotos] = useState<IPhoto[]>([]);
+  const [query, setQuery] = useState<string>('');
+  const [page, setPage] = useState<number>(1);
+  const [error, setError] = useState<null | string>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isEmpty, setIsEmpty] = useState<boolean>(false);
+  const [isVisible, setIsVisible] = useState<boolean>(false);
+  const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
+  const [modalAlt, setModalAlt] = useState<string>('');
+  const [modalSrc, setModalSrc] = useState<string>('');
+  const [likes, setLikes] = useState<number>(0);
 
   useEffect(() => {
     if (!query) return;
@@ -35,7 +36,11 @@ function App() {
         setPhotos(prevPhotos => [...prevPhotos, ...results]);
         setIsVisible(page < total_pages);
       } catch (error) {
-        setError(error);
+        if (error instanceof Error) {
+          setError(error.message);
+        } else {
+          setError('Unknown error');
+        }
       } finally {
         setIsLoading(false);
       }
@@ -43,7 +48,7 @@ function App() {
     fetchPhotos();
   }, [query, page]);
 
-  const getQuery = inputValue => {
+  const getQuery = (inputValue: string): void => {
     setQuery(inputValue);
     setPhotos([]);
     setPage(1);
@@ -52,22 +57,22 @@ function App() {
     setIsVisible(false);
   };
 
-  const handleLoadMore = () => {
+  const handleLoadMore = (): void => {
     setPage(prevPage => prevPage + 1);
   };
 
-  const openModal = (src, alt, likes) => {
+  const openModal = (src: string, alt: string, likes: number): void => {
     setModalIsOpen(true);
     setModalSrc(src);
     setModalAlt(alt);
     setLikes(likes);
   };
 
-  const closeModal = () => {
+  const closeModal = (): void => {
     setModalIsOpen(false);
     setModalSrc('');
     setModalAlt('');
-    setLikes('');
+    setLikes(0);
   };
 
   return (

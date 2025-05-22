@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { GetPhotosResponse } from '../../src/components/App/App.types';
 
 const ACCESS_KEY = '401q7YIUpv3zQTK-2Y1DgxjTDjRv66fq8cdK8Zu_7vg';
 
@@ -9,7 +10,10 @@ axios.defaults.params = {
   orientation: 'landscape',
 };
 
-export const getPhotos = async (query, page) => {
+export const getPhotos = async (
+  query: string,
+  page: number
+): Promise<GetPhotosResponse> => {
   const { data } = await axios.get(`search/photos`, {
     params: { query, page },
   });
